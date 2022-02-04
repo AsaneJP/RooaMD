@@ -228,5 +228,4 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/react,macos,linux,windows,node
 
 
-.env
 db/
