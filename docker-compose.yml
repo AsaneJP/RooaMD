@@ -1,0 +1,126 @@
+version: '3.9'
+services:
+  db:
+    # コンテナ名を指定
+    container_name: rooamd_db
+    # イメージを指定
+    image: postgres:14.1-alpine
+    # envファイルの読み込み
+    env_file:
+      - ./.env
+    # 環境変数を定義
+    environment:
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_INITDB_ARGS=${POSTGRES_INITDB_ARGS}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - TZ=${TZ}
+    # 再起動設定
+    restart: always
+    # ボリュームバインド
+    volumes:
+      - ./db/postgres/init.d:/docker-entrypoint-initdb.d
+      - ./db/postgres/pgdata:/var/lib/postgresql/data
+    # 使用するポート番号
+    ports:
+      - 5432:5432
+    # 使用するネットワーク
+    networks:
+      - container-link
+
+  pgadmin:
+    # コンテナ名を指定
+    container_name: rooamd_pgadmin
+    #イメージを指定
+    image: dpage/pgadmin4
+    # envファイルの読み込み
+    env_file:
+      - ./.env
+    # 環境変数を定義
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      - TZ=${TZ}
+    # 再起動設定
+    restart: always
+    #ボリュームバインド
+    volumes:
+      - ./db/pgadmin:/var/lib/pgadmin
+    # 使用するポート番号
+    ports:
+      - 81:80
+    # 使用するネットワーク
+    networks:
+      - container-link
+    # 依存関係
+    depends_on:
+      - db
+  backend:
+    # コンテナ名を指定
+    container_name: rooamd_backend
+    # イメージを指定
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 再起動設定
+    restart: always
+    # ボリュームバインド
+    volumes:
+      - ./backend:/backend
+    # 起動時のカレントディレクトリ
+    working_dir: /backend
+    # 起動時に実行するコマンド
+    command: node
+    # コンテナを起動させ続ける設定
+    tty: true
+    # envファイルの読み込み
+    env_file:
+      - ./.env
+    # 環境変数を定義
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - TZ=${TZ}
+    # 使用するポート番号
+    ports:
+      - 8080:8080
+    # 使用するネットワーク
+    networks:
+      - container-link
+    # 依存関係
+    depends_on:
+      - pgadmin
+
+  frontend:
+    # コンテナ名を指定
+    container_name: rooamd_frontend
+    # イメージを指定
+    build:
+      context: .
+      dockerfile: Dockerfile
+    # 再起動設定
+    restart: always
+    # ボリュームバインド
+    volumes:
+      - ./frontend:/frontend
+    # 起動時のカレントディレクトリ
+    working_dir: /frontend
+    # 起動時に実行するコマンド
+    command: node
+    # コンテナを起動させ続ける設定
+    tty: true
+    # 環境変数を定義
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    # code 使用するポート番号
+    ports:
+      - 3000:3000
+      - 6006:6006
+    # 使用するネットワーク
+    networks:
+      - container-link
+    # 依存関係
+    depends_on:
+      - backend
+
+networks:
+  container-link:
