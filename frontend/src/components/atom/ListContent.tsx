@@ -5,31 +5,27 @@ import { useRecoilState } from 'recoil'
 import { ListCheckState } from '../../globalState/ListCheckState'
 
 type Props = {
-  children: string,
-  icon: ReactElement,
-  selectIndex: string,
+  children: string
+  icon: ReactElement
+  selectIndex: string
 }
 
 export const ListContent: VFC<Props> = (props) => {
-  const { children, icon, selectIndex} = props;
+  const { children, icon, selectIndex } = props
 
-  const [selectedIndex, setSelectedIndex] = useRecoilState(ListCheckState);
+  const [selectedIndex, setSelectedIndex] = useRecoilState(ListCheckState)
 
-  const handleListItemClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: string,
-  ) => {
-    setSelectedIndex(index);
-  };
+  const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: string) => {
+    setSelectedIndex(index)
+  }
 
   return (
     <ListItem
       button
       selected={selectedIndex === selectIndex}
-      onClick={(event) => handleListItemClick(event, selectIndex)}>
-      <ListItemIcon>
-        {icon}
-      </ListItemIcon>
+      onClick={(event) => handleListItemClick(event, selectIndex)}
+    >
+      <ListItemIcon>{icon}</ListItemIcon>
       <ListItemText primary={children} />
     </ListItem>
   )

@@ -63,9 +63,9 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen,
       }),
-      width: theme.spacing(7),
+      width: theme.spacing(0),
       [theme.breakpoints.up('sm')]: {
-        width: theme.spacing(9),
+        width: theme.spacing(7),
       },
     }),
   },
@@ -135,7 +135,7 @@ export const Layout: VFC<Props> = (props) => {
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
-          <Box sx={{ height: `calc(100vh - 64px - 130px)`, overflow: 'scroll' }}>
+          <Box sx={{ height: `calc(100vh - 64px - 130px)`, overflow: 'scroll', overflowX: 'hidden' }}>
             <Divider />
             <MainListItems />
           </Box>

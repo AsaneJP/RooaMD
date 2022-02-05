@@ -9,37 +9,31 @@ import { ListCheckState } from '../../globalState/ListCheckState'
 import { menuOpenState } from '../../globalState/menuOpenState'
 
 type Props = {
-  folderName: string,
-  children: ReactElement,
+  folderName: string
+  children: ReactElement
 }
 
 export const FolderList: VFC<Props> = (props) => {
-  const {folderName, children} = props;
-  const [open, setOpen] = useState(false);
+  const { folderName, children } = props
+  const [open, setOpen] = useState(false)
 
-  const [selectedIndex, setSelectedIndex] = useRecoilState(ListCheckState);
-  const menuOpen = useRecoilValue(menuOpenState);
+  const [selectedIndex, setSelectedIndex] = useRecoilState(ListCheckState)
+  const menuOpen = useRecoilValue(menuOpenState)
 
   useEffect(() => {
     if (!menuOpen) {
-      setOpen(menuOpen);
+      setOpen(menuOpen)
     }
   }, [menuOpen])
 
-  const handleClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>,
-    index: string,
-  ) => {
-    setOpen(!open);
-    setSelectedIndex(index);
-  };
+  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: string) => {
+    setOpen(!open)
+    setSelectedIndex(index)
+  }
 
   return (
     <>
-      <ListItem
-        button
-        onClick={(event) => handleClick(event, folderName)}
-        selected={selectedIndex === folderName}>
+      <ListItem button onClick={(event) => handleClick(event, folderName)} selected={selectedIndex === folderName}>
         <ListItemIcon>
           <FolderIcon />
         </ListItemIcon>
