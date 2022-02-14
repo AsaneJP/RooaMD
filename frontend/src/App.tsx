@@ -2,6 +2,7 @@ import { VFC } from 'react'
 import { BrowserRouter } from 'react-router-dom'
 import { RecoilRoot } from 'recoil'
 import { Router } from './router/Router'
+import './App.css'
 
 const App: VFC = () => (
   <RecoilRoot>

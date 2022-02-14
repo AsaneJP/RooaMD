@@ -11,9 +11,17 @@ const sanitizer = require('markdown-it-sanitizer')
 const emoji = require('markdown-it-emoji')
 
 const editorStyle = css`
-  .CodeMirror,
-  .CodeMirror-scroll {
-    height: 80vh;
+  .CodeMirror {
+    height: 90vh;
+    width: 100%;
+    border-radius: none;
+  }
+  .EasyMDEContainer .CodeMirror {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }
+  .editor-statusbar{
+    display: none;
   }
 `
 
@@ -53,11 +61,20 @@ export const Editor: VFC = memo(() => {
   const md = mdParser.render(markdown)
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', mt: 5, m: '50px' }}>
-      <Box sx={{ height: "100%" }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', height: "90vh"}}>
+      <Box sx={{ width: "50%", height: "90vh" }}>
         <SimpleMde value={markdown} onChange={onChangeMarkdown} options={mdOptions} css={editorStyle} />
       </Box>
-      <Box sx={{ width: '50%', minWidth: '500px' }} dangerouslySetInnerHTML={{ __html: md }} />
+      <Box
+        sx={{
+          maxHeight: "100%",
+          width: '50%',
+          border: '1px solid #ddd',
+          backgroundColor: "#fff",
+          color: "#000",
+        }}
+        dangerouslySetInnerHTML={{ __html: md }}
+      />
     </Box>
   )
 })
