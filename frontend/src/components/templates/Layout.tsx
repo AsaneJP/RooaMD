@@ -89,7 +89,7 @@ export const Layout: VFC<Props> = (props) => {
       }),
     [prefersDarkMode]
   )
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
   const toggleDrawer = () => {
     setOpen(!open)
     setMenuOpen(!menuOpen)

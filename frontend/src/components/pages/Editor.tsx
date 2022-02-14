@@ -1,19 +1,35 @@
-import { useCallback, useState, VFC } from 'react'
+import { memo, useCallback, useMemo, useState, VFC } from 'react'
 import SimpleMde from 'react-simplemde-editor'
-import 'easymde/dist/easymde.min.css'
 import { Box } from '@mui/material'
 import hljs from 'highlight.js'
-import 'highlight.js/styles/github.css'
 import MarkdownIt from 'markdown-it'
+import { css } from '@emotion/react'
+import 'easymde/dist/easymde.min.css'
+import 'highlight.js/styles/github.css'
 
 const sanitizer = require('markdown-it-sanitizer')
-const emoji = require('markdown-it-emoji');
+const emoji = require('markdown-it-emoji')
 
-export const Editor: VFC = () => {
+const editorStyle = css`
+  .CodeMirror,
+  .CodeMirror-scroll {
+    height: 80vh;
+  }
+`
+
+export const Editor: VFC = memo(() => {
   const [markdown, setMarkdown] = useState<string>('# Hello, world! :smile:')
 
   const onChangeMarkdown = useCallback((value: string) => {
     setMarkdown(value)
+  }, [])
+
+  const mdOptions = useMemo(() => {
+    return {
+      toolbar: false,
+      autofocus: true,
+      spellChecker: false,
+    }
   }, [])
 
   const mdParser = new MarkdownIt({
@@ -37,9 +53,11 @@ export const Editor: VFC = () => {
   const md = mdParser.render(markdown)
 
   return (
-    <Box>
-      <SimpleMde value={markdown} onChange={onChangeMarkdown} />
-      <Box dangerouslySetInnerHTML={{ __html: md }} />
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', mt: 5, m: '50px' }}>
+      <Box sx={{ height: "100%" }}>
+        <SimpleMde value={markdown} onChange={onChangeMarkdown} options={mdOptions} css={editorStyle} />
+      </Box>
+      <Box sx={{ width: '50%', minWidth: '500px' }} dangerouslySetInnerHTML={{ __html: md }} />
     </Box>
   )
-}
+})
