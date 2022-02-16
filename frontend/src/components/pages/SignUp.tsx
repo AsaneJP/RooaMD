@@ -41,7 +41,7 @@ const schema = yup.object().shape({
 })
 
 export const SignUp = () => {
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState('')
   const {
     register,
     handleSubmit,
@@ -65,9 +65,9 @@ export const SignUp = () => {
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
         if (error.response!.status === 500) {
-          setErrorMsg('既に登録されているメールアドレスです');
+          setErrorMsg('既に登録されているメールアドレスです')
         } else {
-          setErrorMsg('予期せぬエラーが発生しました');
+          setErrorMsg('予期せぬエラーが発生しました')
         }
       })
     reset({ password: '', repassword: '' })
@@ -85,7 +85,7 @@ export const SignUp = () => {
         }}
       >
         <Box sx={{ mt: 1, width: '100%' }}>
-          {errorMsg !== "" && (
+          {errorMsg !== '' && (
             <FormControl error>
               <FormHelperText>{errorMsg}</FormHelperText>
             </FormControl>

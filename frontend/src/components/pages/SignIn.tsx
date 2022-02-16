@@ -1,23 +1,66 @@
-import Button from '@mui/material/Button'
-import CssBaseline from '@mui/material/CssBaseline'
-import TextField from '@mui/material/TextField'
-import FormControlLabel from '@mui/material/FormControlLabel'
-import Checkbox from '@mui/material/Checkbox'
-import Grid from '@mui/material/Grid'
-import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
-import Container from '@mui/material/Container'
-import { Link } from '@mui/material'
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import axios, { AxiosResponse, AxiosError } from 'axios'
+import { useCookies } from 'react-cookie'
+import { useForm } from 'react-hook-form'
+import * as yup from 'yup'
+import { yupResolver } from '@hookform/resolvers/yup'
+import { Link, Container, Typography, Box, Grid, CssBaseline, Button, FormControl, FormHelperText } from '@mui/material'
+import { InputText } from '../atom/InputText'
+import { InputCheckBox } from '../atom/InputCheckBox'
+
+type FormData = {
+  email: string
+  password: string
+  check: boolean
+}
+
+const schema = yup.object().shape({
+  email: yup.string().email('メールアドレスを入力してください').required('メールアドレスは必須です'),
+  password: yup
+    .string()
+    .required('パスワードは必須です')
+    .min(8, 'パスワードは8文字以上で入力してください')
+    .max(32, 'パスワードは32文字以内で入力してください')
+    .matches(
+      /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&].*$/,
+      'パスワードは小文字・大文字・数字・特殊文字を含めて入力してください'
+    ),
+  check: yup.boolean(),
+})
 
 export const SignIn = () => {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const data = new FormData(event.currentTarget)
-    // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    })
+  const [errorMsg, setErrorMsg] = useState('')
+  const setCookie = useCookies()[1]
+  const navigate = useNavigate()
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<FormData>({
+    mode: 'onBlur',
+    resolver: yupResolver(schema),
+  })
+
+  const onSubmit = (inData: FormData) => {
+    axios
+      .post(`${process.env.REACT_APP_API_URL || 'local'}/auth/signin`, {
+        email: inData.email,
+        password: inData.password,
+      })
+      .then((res: AxiosResponse<{ accessToken: string }>) => {
+        setCookie('accessToken', res.data.accessToken, { httpOnly: true })
+        navigate('/')
+      })
+      .catch((error: AxiosError<{ additionalInfo: string }>) => {
+        if (error.response!.status === 500) {
+          setErrorMsg('メールアドレスが存在しないか、パスワードが間違っています')
+        } else {
+          setErrorMsg('予期せぬエラーが発生しました')
+        }
+      })
+    reset({ password: '' })
   }
 
   return (
@@ -31,20 +74,41 @@ export const SignIn = () => {
           alignItems: 'center',
         }}
       >
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 1 }}>
-          <TextField margin="normal" required fullWidth id="email" label="Email" name="email" autoComplete="email" />
-          <TextField
-            margin="normal"
+        <Box sx={{ mt: 1, width: '100%' }}>
+          {errorMsg !== '' && (
+            <FormControl error>
+              <FormHelperText>{errorMsg}</FormHelperText>
+            </FormControl>
+          )}
+          <InputText
+            id="email"
+            label="Email"
+            type="email"
             required
-            fullWidth
-            name="password"
+            error={'email' in errors}
+            helperText={errors.email?.message}
+            register={register('email')}
+          />
+          <InputText
+            id="password"
             label="Password"
             type="password"
-            id="password"
-            autoComplete="current-password"
+            required
+            error={'password' in errors}
+            helperText={errors.password?.message}
+            register={register('password')}
           />
-          <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="ログイン状態を保存する" />
-          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }}>
+
+          <InputCheckBox
+            id="check"
+            name="check"
+            label="ログイン状態を保存する"
+            error={'check' in errors}
+            helperText={errors.check?.message}
+            register={register('check')}
+          />
+
+          <Button type="submit" fullWidth variant="contained" sx={{ mt: 3, mb: 2 }} onClick={handleSubmit(onSubmit)}>
             ログイン
           </Button>
           <Grid container>
