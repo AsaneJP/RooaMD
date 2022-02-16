@@ -21,8 +21,8 @@ export const FolderList: VFC<Props> = (props) => {
   const menuOpen = useRecoilValue(menuOpenState)
 
   useEffect(() => {
-    if (!menuOpen) {
-      setOpen(menuOpen)
+    if (menuOpen) {
+      setOpen(!menuOpen)
     }
   }, [menuOpen])
 

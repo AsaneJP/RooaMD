@@ -20,7 +20,7 @@ const editorStyle = css`
     border-bottom-left-radius: 0px;
     border-bottom-right-radius: 0px;
   }
-  .editor-statusbar{
+  .editor-statusbar {
     display: none;
   }
 `
@@ -61,17 +61,17 @@ export const Editor: VFC = memo(() => {
   const md = mdParser.render(markdown)
 
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', height: "90vh"}}>
-      <Box sx={{ width: "50%", height: "90vh" }}>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', height: '90vh' }}>
+      <Box sx={{ width: '50%', height: '90vh' }}>
         <SimpleMde value={markdown} onChange={onChangeMarkdown} options={mdOptions} css={editorStyle} />
       </Box>
       <Box
         sx={{
-          maxHeight: "100%",
+          maxHeight: '100%',
           width: '50%',
           border: '1px solid #ddd',
-          backgroundColor: "#fff",
-          color: "#000",
+          backgroundColor: '#fff',
+          color: '#000',
         }}
         dangerouslySetInnerHTML={{ __html: md }}
       />
