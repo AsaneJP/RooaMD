@@ -1,7 +1,9 @@
+import { useState } from 'react'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
-import { Link, Typography, Container, Box, Grid, CssBaseline, Button } from '@mui/material'
+import { Link, Typography, Container, Box, Grid, CssBaseline, Button, FormHelperText, FormControl } from '@mui/material'
 import { InputText } from '../atom/InputText'
 import { InputCheckBox } from '../atom/InputCheckBox'
 
@@ -39,6 +41,7 @@ const schema = yup.object().shape({
 })
 
 export const SignUp = () => {
+  const [errorMsg, setErrorMsg] = useState("");
   const {
     register,
     handleSubmit,
@@ -50,7 +53,24 @@ export const SignUp = () => {
   })
 
   const onSubmit = (inData: FormData) => {
-    console.log(inData)
+    axios
+      .post(`${process.env.REACT_APP_API_URL || 'local'}/auth/signup`, {
+        username: inData.username,
+        email: inData.email,
+        password: inData.password,
+        status: 'FREE',
+      })
+      .then((res) => {
+        // console.log(res.status)
+      })
+      .catch((error: AxiosError<{ additionalInfo: string }>) => {
+        if (error.response!.status === 500) {
+          setErrorMsg('既に登録されているメールアドレスです');
+        } else {
+          setErrorMsg('予期せぬエラーが発生しました');
+        }
+      })
+    reset({ password: '', repassword: '' })
   }
 
   return (
@@ -65,6 +85,11 @@ export const SignUp = () => {
         }}
       >
         <Box sx={{ mt: 1, width: '100%' }}>
+          {errorMsg !== "" && (
+            <FormControl error>
+              <FormHelperText>{errorMsg}</FormHelperText>
+            </FormControl>
+          )}
           <InputText
             id="username"
             label="Username"
