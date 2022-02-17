@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useCookies } from 'react-cookie'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
@@ -42,6 +44,8 @@ const schema = yup.object().shape({
 
 export const SignUp = () => {
   const [errorMsg, setErrorMsg] = useState('')
+  const setCookie = useCookies()[1]
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -60,8 +64,9 @@ export const SignUp = () => {
         password: inData.password,
         status: 'FREE',
       })
-      .then((res) => {
-        // console.log(res.status)
+      .then((res: AxiosResponse<{ accessToken: string }>) => {
+        setCookie('accessToken', res.data.accessToken, { httpOnly: true })
+        navigate('/')
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
         if (error.response!.status === 500) {

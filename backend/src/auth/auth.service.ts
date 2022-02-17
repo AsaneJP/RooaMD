@@ -13,8 +13,12 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signUp(createUserDto: CreateUserDto): Promise<User> {
-    return await this.userRepository.createUser(createUserDto);
+  async signUp(createUserDto: CreateUserDto): Promise<{ accessToken: string }> {
+    const user = await this.userRepository.createUser(createUserDto);
+
+    const payload = { id: user.id, username: user.username };
+    const accessToken = await this.jwtService.sign(payload);
+    return { accessToken };
   }
 
   async signIn(
@@ -29,7 +33,7 @@ export class AuthService {
       return { accessToken };
     }
     throw new UnauthorizedException(
-      'ユーザー名またはパスワードを確認してください',
+      'メールアドレスまたはパスワードを確認してください',
     );
   }
 }
