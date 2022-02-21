@@ -1,6 +1,7 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import { UserStatus } from 'src/auth/user-status.enum';
+import { Folder } from './folder.entity';
 
 @Entity()
 export class User {
@@ -25,4 +26,7 @@ export class User {
 
   @Column()
   updatedAt: string;
+
+  @OneToMany(() => Folder, (folder) => folder.user)
+  folders: Folder[];
 }

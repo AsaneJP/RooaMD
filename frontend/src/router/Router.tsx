@@ -1,6 +1,7 @@
 import { memo, VFC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Editor } from '../components/pages/Editor'
+import { Index } from '../components/pages/Index'
 import { SignIn } from '../components/pages/SignIn'
 import { SignUp } from '../components/pages/SignUp'
 import { Layout } from '../components/templates/Layout'
@@ -10,8 +11,8 @@ export const Router: VFC = memo(() => (
     <Route
       path="/"
       element={
-        <Layout title="Index">
-          <p>Index</p>
+        <Layout title="Top Page">
+          <Index />
         </Layout>
       }
     />

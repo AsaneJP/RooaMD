@@ -54,7 +54,7 @@ export const SignIn = () => {
         navigate('/')
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
-        if (error.response!.status === 500) {
+        if (error.response!.status === 401) {
           setErrorMsg('メールアドレスが存在しないか、パスワードが間違っています')
         } else {
           setErrorMsg('予期せぬエラーが発生しました')

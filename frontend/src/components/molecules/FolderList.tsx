@@ -5,8 +5,8 @@ import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import FolderIcon from '@mui/icons-material/Folder'
 import { useRecoilState, useRecoilValue } from 'recoil'
-import { ListCheckState } from '../../globalState/ListCheckState'
 import { menuOpenState } from '../../globalState/menuOpenState'
+import { listCheckState } from '../../globalState/listCheckState'
 
 type Props = {
   folderName: string
@@ -17,7 +17,7 @@ export const FolderList: VFC<Props> = (props) => {
   const { folderName, children } = props
   const [open, setOpen] = useState(false)
 
-  const [selectedIndex, setSelectedIndex] = useRecoilState(ListCheckState)
+  const [selectedIndex, setSelectedIndex] = useRecoilState(listCheckState)
   const menuOpen = useRecoilValue(menuOpenState)
 
   useEffect(() => {

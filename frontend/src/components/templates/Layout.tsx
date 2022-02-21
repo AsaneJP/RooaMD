@@ -12,16 +12,19 @@ import {
   Typography,
   useMediaQuery,
 } from '@mui/material'
-import { useRecoilState } from 'recoil'
+import { useRecoilState, useSetRecoilState } from 'recoil'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
 import MenuIcon from '@mui/icons-material/Menu'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import PersonIcon from '@mui/icons-material/Person'
 import SettingsIcon from '@mui/icons-material/Settings'
-import { MainListItems } from '../organisms/ListItems'
+import { MainListItem } from '../organisms/MainListItem'
 import { ListContent } from '../atom/ListContent'
 import { menuOpenState } from '../../globalState/menuOpenState'
+import { useContextMenu } from '../../hooks/useContextMenu'
+import { ContextMenu } from '../molecules/ContextMenu'
+import { listCheckState } from '../../globalState/listCheckState'
 
 const drawerWidth = 240
 
@@ -84,6 +87,8 @@ type Props = {
 
 export const Layout: VFC<Props> = (props) => {
   const { children, title } = props
+  const { handleContextMenu } = useContextMenu()
+  const setSelectedIndex = useSetRecoilState(listCheckState)
   const [menuOpen, setMenuOpen] = useRecoilState(menuOpenState)
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
   const theme = useMemo(
@@ -99,6 +104,10 @@ export const Layout: VFC<Props> = (props) => {
   const toggleDrawer = () => {
     setOpen(!open)
     setMenuOpen(!menuOpen)
+  }
+
+  const handleListClick = () => {
+    setSelectedIndex('default')
   }
 
   return (
@@ -137,13 +146,21 @@ export const Layout: VFC<Props> = (props) => {
               px: [1],
             }}
           >
+            <Typography variant="h1" sx={{ fontSize: '20px', margin: "0 auto" }}>
+              RooaMD
+            </Typography>
             <IconButton onClick={toggleDrawer}>
               <ChevronLeftIcon />
             </IconButton>
           </Toolbar>
-          <Box sx={{ height: `calc(100vh - 64px - 130px)`, overflow: 'scroll', overflowX: 'hidden' }}>
+          <Box
+            sx={{ height: `calc(100vh - 64px - 130px)`, overflow: 'scroll', overflowX: 'hidden' }}
+            onContextMenu={handleContextMenu}
+          >
             <Divider />
-            <MainListItems />
+            <MainListItem />
+            <Box onClick={handleListClick} sx={{ minHeight: '40px' }} />
+            <ContextMenu />
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 'auto' }}>
             <Divider />
