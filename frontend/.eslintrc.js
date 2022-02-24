@@ -17,6 +17,8 @@ module.exports = {
   plugins: ['react', '@typescript-eslint'],
   ignorePatterns: ['.eslintrc.js'],
   rules: {
+    "dot-notation": "off",
+    "@typescript-eslint/restrict-template-expressions": "off",
     "arrow-body-style": "off",
     "@typescript-eslint/no-non-null-assertion": "off",
     "@typescript-eslint/no-var-requires": "off",

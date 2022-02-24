@@ -1,5 +1,7 @@
 import { Box, Button, Typography } from '@mui/material'
 import { VFC } from 'react'
+import { useCookies } from 'react-cookie'
+import axios, { AxiosResponse, AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
 import * as yup from 'yup'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -37,6 +39,7 @@ export const AddContent: VFC<Props> = (props) => {
   const { judge } = props
   const setOpen = useSetRecoilState(addContentState)
   const selectedIndex = useRecoilValue(listCheckState)
+  const cookie = useCookies(['accessToken'])
 
   const {
     register,
@@ -50,6 +53,26 @@ export const AddContent: VFC<Props> = (props) => {
 
   const onSubmit = (inData: FormData) => {
     console.log(inData)
+    if (cookie[0].accessToken !== undefined) {
+      if (judge) {
+        console.log(cookie[0].accessToken)
+        axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
+        axios
+          .post(`${process.env.REACT_APP_API_URL || 'local'}/folders`, {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            name: inData.name,
+            paremtId: '',
+          })
+          .then((res: AxiosResponse<{ accessToken: string }>) => {
+            console.log(res)
+          })
+          .catch((error: AxiosError<{ additionalInfo: string }>) => {
+            console.log(error.message)
+          })
+      }
+    }
     reset({ name: '' })
   }
 

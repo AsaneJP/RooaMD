@@ -12,8 +12,8 @@ export class FoldersController {
   constructor(private readonly foldersService: FoldersService) {}
 
   @Get()
-  async findAll(): Promise<Folder[]> {
-    return await this.foldersService.findAll();
+  async findAll(@GetUser() user: User): Promise<Folder[]> {
+    return await this.foldersService.findAll(user);
   }
 
   @Post()

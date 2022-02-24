@@ -31,7 +31,7 @@ const schema = yup.object().shape({
 
 export const SignIn = () => {
   const [errorMsg, setErrorMsg] = useState('')
-  const setCookie = useCookies()[1]
+  const setCookie = useCookies(['accessToken'])[1]
   const navigate = useNavigate()
   const {
     register,
@@ -50,7 +50,7 @@ export const SignIn = () => {
         password: inData.password,
       })
       .then((res: AxiosResponse<{ accessToken: string }>) => {
-        setCookie('accessToken', res.data.accessToken, { httpOnly: true })
+        setCookie('accessToken', res.data.accessToken)
         navigate('/')
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
