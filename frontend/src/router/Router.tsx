@@ -5,17 +5,27 @@ import { Index } from '../components/pages/Index'
 import { SignIn } from '../components/pages/SignIn'
 import { SignUp } from '../components/pages/SignUp'
 import { Layout } from '../components/templates/Layout'
+import { AuthGuard } from './AuthGuard'
 
 export const Router: VFC = memo(() => (
   <Routes>
     <Route
       path="/"
       element={
-        <Layout title="Top Page">
-          <Index />
-        </Layout>
+        <AuthGuard title="Top Page">
+            <Index />
+        </AuthGuard>
       }
     />
+    <Route
+      path="/editor"
+      element={
+        <AuthGuard title="Editor">
+          <Editor />
+        </AuthGuard>
+      }
+    />
+
     <Route
       path="/signin"
       element={
@@ -29,14 +39,6 @@ export const Router: VFC = memo(() => (
       element={
         <Layout title="Sign Up">
           <SignUp />
-        </Layout>
-      }
-    />
-    <Route
-      path="/editor"
-      element={
-        <Layout title="Editor">
-          <Editor />
         </Layout>
       }
     />

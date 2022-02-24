@@ -1,5 +1,5 @@
-import { Box, Button, Typography } from '@mui/material'
-import { memo, VFC } from 'react'
+import { Alert, Box, Button, Snackbar, Typography } from '@mui/material'
+import { memo, useState, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
@@ -10,6 +10,7 @@ import { addContentState } from '../../globalState/addContentState'
 import { InputText } from '../atom/InputText'
 import { ModalWindow } from '../atom/ModalWindow'
 import { listCheckState } from '../../globalState/listCheckState'
+import { AleartMsg } from '../atom/AleartMsg'
 
 type Props = {
   judge: boolean
@@ -40,6 +41,7 @@ export const AddContent: VFC<Props> = memo((props) => {
   const setOpen = useSetRecoilState(addContentState)
   const selectedIndex = useRecoilValue(listCheckState)
   const cookie = useCookies(['accessToken'])
+  const [msg, setMsg] = useState<"error" | "success" | "warning" | "info" | "default">("default")
 
   const {
     register,
@@ -54,9 +56,6 @@ export const AddContent: VFC<Props> = memo((props) => {
   const onSubmit = (inData: FormData) => {
     if (cookie[0].accessToken !== undefined) {
       if (judge) {
-        // eslint-disable-next-line no-console
-        console.log(cookie[0].accessToken)
-
         axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
         const data = {
           name: inData.name,
@@ -64,17 +63,16 @@ export const AddContent: VFC<Props> = memo((props) => {
 
         axios
           .post(`${process.env.REACT_APP_API_URL || 'local'}/folders`, data)
-          .then((res: AxiosResponse<{ accessToken: string }>) => {
-            // eslint-disable-next-line no-console
-            console.log(res)
+          .then(() => {
+            setMsg('success')
           })
-          .catch((error: AxiosError<{ additionalInfo: string }>) => {
-            // eslint-disable-next-line no-console
-            console.log(error.response)
+          .catch(() => {
+            setMsg('error')
           })
       }
     }
     reset({ name: '' })
+    setOpen(false)
   }
 
   const handleClose = () => {
@@ -82,6 +80,13 @@ export const AddContent: VFC<Props> = memo((props) => {
     setOpen(false)
   }
 
+  if (msg !== "default") {
+    return (
+      <AleartMsg openMsg type={msg}>
+        {msg === 'success' ? '追加しました' : '予期せぬエラーが発生しました'}
+      </AleartMsg>
+    )
+  }
   return (
     <ModalWindow>
       <Box sx={style}>

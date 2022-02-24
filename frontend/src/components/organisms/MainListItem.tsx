@@ -1,4 +1,5 @@
 import { memo, useEffect, useState } from 'react'
+import { useSetRecoilState } from 'recoil'
 import { ListSubheader, List } from '@mui/material'
 import axios, { AxiosError } from 'axios'
 import { useCookies } from 'react-cookie'
@@ -6,10 +7,12 @@ import DescriptionIcon from '@mui/icons-material/Description'
 import { FolderList } from '../molecules/FolderList'
 import { ListContent } from '../atom/ListContent'
 import { Folder } from '../../types/api/Folder'
+import { listCheckState } from '../../globalState/listCheckState'
 
 export const MainListItem = memo(() => {
   const [folders, setFolders] = useState<Folder[]>([])
   const cookie = useCookies(['accessToken'])
+  const setSelectedIndex = useSetRecoilState(listCheckState)
 
   useEffect(() => {
     axios
@@ -28,9 +31,13 @@ export const MainListItem = memo(() => {
       })
   }, [folders, cookie])
 
+  const handleListClear = () => {
+    setSelectedIndex('default')
+  }
+
   return (
     <List dense>
-      <ListSubheader inset>Folder</ListSubheader>
+      <ListSubheader inset onClick={handleListClear} sx={{ cursor: "default" }}>Folder</ListSubheader>
       <ListContent url="/editor" icon={<DescriptionIcon />} selectIndex="SampleFile">
         SampleFile
       </ListContent>

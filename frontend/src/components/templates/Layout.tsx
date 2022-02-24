@@ -109,7 +109,7 @@ export const Layout: VFC<Props> = memo((props) => {
     setMenuOpen(!menuOpen)
   }
 
-  const handleListClick = () => {
+  const handleListClear = () => {
     setSelectedIndex('default')
   }
 
@@ -170,7 +170,7 @@ export const Layout: VFC<Props> = memo((props) => {
           >
             <Divider />
             <MainListItem />
-            <Box onClick={handleListClick} sx={{ minHeight: '40px' }} />
+            <Box onClick={handleListClear} sx={{ minHeight: '40px' }} />
             <ContextMenu />
           </Box>
           <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 'auto' }}>
