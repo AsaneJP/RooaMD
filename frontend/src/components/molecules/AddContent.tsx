@@ -52,10 +52,11 @@ export const AddContent: VFC<Props> = (props) => {
   })
 
   const onSubmit = (inData: FormData) => {
-    console.log(inData)
     if (cookie[0].accessToken !== undefined) {
       if (judge) {
+        // eslint-disable-next-line no-console
         console.log(cookie[0].accessToken)
+
         axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
         axios
           .post(`${process.env.REACT_APP_API_URL || 'local'}/folders`, {
@@ -63,13 +64,14 @@ export const AddContent: VFC<Props> = (props) => {
               'Content-Type': 'application/json',
             },
             name: inData.name,
-            paremtId: '',
           })
           .then((res: AxiosResponse<{ accessToken: string }>) => {
+            // eslint-disable-next-line no-console
             console.log(res)
           })
           .catch((error: AxiosError<{ additionalInfo: string }>) => {
-            console.log(error.message)
+            // eslint-disable-next-line no-console
+            console.log(error.response)
           })
       }
     }

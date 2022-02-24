@@ -16,7 +16,7 @@ export class Folder {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   parentId: string;
 
   @Column()

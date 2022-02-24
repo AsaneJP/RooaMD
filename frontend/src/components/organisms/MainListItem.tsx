@@ -12,11 +12,11 @@ export const MainListItem = () => {
   const cookie = useCookies(['accessToken'])
 
   useEffect(() => {
-    axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
     axios
       .get<Array<Folder>>(`${process.env.REACT_APP_API_URL || 'local'}/folders`, {
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${cookie[0].accessToken}`,
         },
       })
       .then((res) => {
