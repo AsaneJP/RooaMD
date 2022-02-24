@@ -1,5 +1,5 @@
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
-import { ReactElement, useEffect, useState, VFC } from 'react'
+import { memo, ReactElement, useEffect, useState, VFC } from 'react'
 import Collapse from '@mui/material/Collapse'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
@@ -14,7 +14,7 @@ type Props = {
   children?: ReactElement
 }
 
-export const FolderList: VFC<Props> = (props) => {
+export const FolderList: VFC<Props> = memo((props) => {
   const { folderId, folderName, children } = props
   const [open, setOpen] = useState(false)
 
@@ -34,7 +34,7 @@ export const FolderList: VFC<Props> = (props) => {
 
   return (
     <>
-      <ListItem button onClick={(event) => handleClick(event, folderId)} selected={selectedIndex === folderName}>
+      <ListItem button onClick={(event) => handleClick(event, folderId)} selected={selectedIndex === folderId}>
         <ListItemIcon>
           <FolderIcon />
         </ListItemIcon>
@@ -48,4 +48,4 @@ export const FolderList: VFC<Props> = (props) => {
       </Collapse>
     </>
   )
-}
+})

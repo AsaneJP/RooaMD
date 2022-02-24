@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { Menu, MenuItem } from '@mui/material'
 import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolder'
 import NoteAddIcon from '@mui/icons-material/NoteAdd'
@@ -7,7 +7,7 @@ import { addContentState } from '../../globalState/addContentState'
 import { contextMenuState } from '../../globalState/contextMenuState'
 import { AddContent } from './AddContent'
 
-export const ContextMenu = () => {
+export const ContextMenu = memo(() => {
   const [contextMenu, setContextMenu] = useRecoilState(contextMenuState)
   const setOpen = useSetRecoilState(addContentState)
   const [judge, setJudge] = useState(false);
@@ -48,4 +48,4 @@ export const ContextMenu = () => {
       <AddContent judge={judge} />
     </>
   )
-}
+})

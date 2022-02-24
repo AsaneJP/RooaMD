@@ -1,5 +1,5 @@
 import { Box, Button, Typography } from '@mui/material'
-import { VFC } from 'react'
+import { memo, VFC } from 'react'
 import { useCookies } from 'react-cookie'
 import axios, { AxiosResponse, AxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
@@ -35,7 +35,7 @@ const style = {
   p: 4,
 }
 
-export const AddContent: VFC<Props> = (props) => {
+export const AddContent: VFC<Props> = memo((props) => {
   const { judge } = props
   const setOpen = useSetRecoilState(addContentState)
   const selectedIndex = useRecoilValue(listCheckState)
@@ -58,13 +58,12 @@ export const AddContent: VFC<Props> = (props) => {
         console.log(cookie[0].accessToken)
 
         axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
+        const data = {
+          name: inData.name,
+        }
+
         axios
-          .post(`${process.env.REACT_APP_API_URL || 'local'}/folders`, {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            name: inData.name,
-          })
+          .post(`${process.env.REACT_APP_API_URL || 'local'}/folders`, data)
           .then((res: AxiosResponse<{ accessToken: string }>) => {
             // eslint-disable-next-line no-console
             console.log(res)
@@ -109,4 +108,4 @@ export const AddContent: VFC<Props> = (props) => {
       </Box>
     </ModalWindow>
   )
-}
+})

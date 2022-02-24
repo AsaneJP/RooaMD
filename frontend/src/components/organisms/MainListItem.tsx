@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { memo, useEffect, useState } from 'react'
 import { ListSubheader, List } from '@mui/material'
 import axios, { AxiosError } from 'axios'
 import { useCookies } from 'react-cookie'
@@ -7,7 +7,7 @@ import { FolderList } from '../molecules/FolderList'
 import { ListContent } from '../atom/ListContent'
 import { Folder } from '../../types/api/Folder'
 
-export const MainListItem = () => {
+export const MainListItem = memo(() => {
   const [folders, setFolders] = useState<Folder[]>([])
   const cookie = useCookies(['accessToken'])
 
@@ -31,7 +31,7 @@ export const MainListItem = () => {
   return (
     <List dense>
       <ListSubheader inset>Folder</ListSubheader>
-      <ListContent icon={<DescriptionIcon />} selectIndex="SampleFile">
+      <ListContent url="/editor" icon={<DescriptionIcon />} selectIndex="SampleFile">
         SampleFile
       </ListContent>
       {folders.map((folder) => (
@@ -39,4 +39,4 @@ export const MainListItem = () => {
       ))}
     </List>
   )
-}
+})

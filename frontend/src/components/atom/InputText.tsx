@@ -1,6 +1,6 @@
 import { TextField } from '@mui/material'
 import { UseFormRegisterReturn } from 'react-hook-form'
-import { VFC } from 'react'
+import { memo, VFC } from 'react'
 
 type Props = {
   id: string
@@ -12,7 +12,7 @@ type Props = {
   type: string
 }
 
-export const InputText: VFC<Props> = (props) => {
+export const InputText: VFC<Props> = memo((props) => {
   const { id, label, error, helperText, required, register, type } = props
   return (
     <TextField
@@ -27,4 +27,4 @@ export const InputText: VFC<Props> = (props) => {
       {...register}
     />
   )
-}
+})

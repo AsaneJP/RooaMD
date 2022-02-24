@@ -1,4 +1,4 @@
-import { ReactElement, useMemo, useState, VFC } from 'react'
+import { memo, ReactElement, useMemo, useState, VFC } from 'react'
 import {
   Box,
   createTheme,
@@ -13,6 +13,7 @@ import {
   useMediaQuery,
 } from '@mui/material'
 import { useRecoilState, useSetRecoilState } from 'recoil'
+import { useNavigate } from 'react-router-dom'
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar'
 import MuiDrawer from '@mui/material/Drawer'
 import MenuIcon from '@mui/icons-material/Menu'
@@ -85,12 +86,14 @@ type Props = {
   children: ReactElement
 }
 
-export const Layout: VFC<Props> = (props) => {
+export const Layout: VFC<Props> = memo((props) => {
   const { children, title } = props
   const { handleContextMenu } = useContextMenu()
   const setSelectedIndex = useSetRecoilState(listCheckState)
   const [menuOpen, setMenuOpen] = useRecoilState(menuOpenState)
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const navigate = useNavigate()
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -108,6 +111,10 @@ export const Layout: VFC<Props> = (props) => {
 
   const handleListClick = () => {
     setSelectedIndex('default')
+  }
+
+  const handlePush = () => {
+    navigate('/')
   }
 
   return (
@@ -146,7 +153,11 @@ export const Layout: VFC<Props> = (props) => {
               px: [1],
             }}
           >
-            <Typography variant="h1" sx={{ fontSize: '20px', margin: "0 auto" }}>
+            <Typography
+              variant="h1"
+              sx={{ fontSize: '20px', margin: '0 auto', cursor: 'pointer' }}
+              onClick={handlePush}
+            >
               RooaMD
             </Typography>
             <IconButton onClick={toggleDrawer}>
@@ -165,10 +176,10 @@ export const Layout: VFC<Props> = (props) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 'auto' }}>
             <Divider />
             <List>
-              <ListContent selectIndex="setting" icon={<SettingsIcon />}>
+              <ListContent url="/config" selectIndex="setting" icon={<SettingsIcon />}>
                 設定
               </ListContent>
-              <ListContent selectIndex="user" icon={<PersonIcon />}>
+              <ListContent url="/user" selectIndex="user" icon={<PersonIcon />}>
                 ユーザー
               </ListContent>
             </List>
@@ -188,4 +199,4 @@ export const Layout: VFC<Props> = (props) => {
       </Box>
     </ThemeProvider>
   )
-}
+})

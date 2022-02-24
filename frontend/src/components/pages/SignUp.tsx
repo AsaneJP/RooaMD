@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useCookies } from 'react-cookie'
 import axios, { AxiosResponse, AxiosError } from 'axios'
@@ -42,7 +42,7 @@ const schema = yup.object().shape({
   permiss: yup.boolean().oneOf([true], '利用規約に同意してください').required('利用規約に同意してください'),
 })
 
-export const SignUp = () => {
+export const SignUp = memo(() => {
   const [errorMsg, setErrorMsg] = useState('')
   const setCookie = useCookies(['accessToken'])[1]
   const navigate = useNavigate()
@@ -157,4 +157,4 @@ export const SignUp = () => {
       </Box>
     </Container>
   )
-}
+})

@@ -1,6 +1,6 @@
 import { Checkbox, FormControl, FormControlLabel, FormHelperText } from '@mui/material'
 import { UseFormRegisterReturn } from 'react-hook-form'
-import { VFC } from 'react'
+import { memo, VFC } from 'react'
 
 type Props = {
   id: string
@@ -11,7 +11,7 @@ type Props = {
   register: UseFormRegisterReturn
 }
 
-export const InputCheckBox: VFC<Props> = (props) => {
+export const InputCheckBox: VFC<Props> = memo((props) => {
   const { id, label, helperText, register, error } = props
   return (
     <FormControl required error={error}>
@@ -19,4 +19,4 @@ export const InputCheckBox: VFC<Props> = (props) => {
       <FormHelperText>{helperText}</FormHelperText>
     </FormControl>
   )
-}
+})
