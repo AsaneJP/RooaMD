@@ -15,6 +15,7 @@ export const MainListItem = memo(() => {
   const setSelectedIndex = useSetRecoilState(listCheckState)
 
   useEffect(() => {
+    let isMounted = true
     axios
       .get<Array<Folder>>(`${process.env.REACT_APP_API_URL || 'local'}/folders`, {
         headers: {
@@ -23,12 +24,18 @@ export const MainListItem = memo(() => {
         },
       })
       .then((res) => {
-        setFolders(res.data)
+        if (isMounted) {
+          setFolders(res.data)
+        }
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
         // eslint-disable-next-line no-console
         console.log(error.message)
       })
+
+    return () => {
+      isMounted = false
+    }
   }, [folders, cookie])
 
   const handleListClear = () => {
@@ -41,9 +48,9 @@ export const MainListItem = memo(() => {
       <ListContent url="/editor" icon={<DescriptionIcon />} selectIndex="SampleFile">
         SampleFile
       </ListContent>
-      {folders.map((folder) => (
+      {folders ? folders.map((folder) => (
         <FolderList key={folder.id} folderId={folder.id} folderName={folder.name} />
-      ))}
+      )) : null}
     </List>
   )
 })
