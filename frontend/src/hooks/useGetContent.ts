@@ -8,6 +8,7 @@ export const useGetContent = () => {
   const [folders, setFolders] = useState<Folder[]>([])
   const [items, setItems] = useState<Item[]>([])
   const cookie = useCookies(['accessToken'])
+  const removeCookie = useCookies(['accessToken'])[2]
 
   useEffect(() => {
     let isMounted = true
@@ -24,14 +25,15 @@ export const useGetContent = () => {
         }
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
-        // eslint-disable-next-line no-console
-        console.log(error.message)
+        if (error.response!.status === 401) {
+          removeCookie('accessToken')
+        }
       })
 
     return () => {
       isMounted = false
     }
-  }, [folders, cookie])
+  })
 
   useEffect(() => {
     let isMounted = true
@@ -48,14 +50,15 @@ export const useGetContent = () => {
         }
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
-        // eslint-disable-next-line no-console
-        console.log(error.message)
+        if (error.response!.status === 401) {
+          removeCookie('accessToken')
+        }
       })
 
     return () => {
       isMounted = false
     }
-  }, [items, cookie])
+  })
 
   return {folders, items}
 }
