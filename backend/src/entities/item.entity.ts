@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
-import { Folder } from './folder.entity';
+import { User } from './user.entity';
 
 @Entity()
 export class Item {
@@ -8,6 +8,9 @@ export class Item {
 
   @Column()
   name: string;
+
+  @Column({ nullable: true })
+  parentId: string;
 
   @Column()
   contents: string;
@@ -18,9 +21,9 @@ export class Item {
   @Column()
   updatedAt: string;
 
-  @ManyToOne(() => Folder, (folder) => folder.items)
-  folder: Folder;
+  @ManyToOne(() => User, (user) => user.items)
+  user: User;
 
   @Column()
-  folderId: string;
+  userId: string;
 }

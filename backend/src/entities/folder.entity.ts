@@ -25,9 +25,6 @@ export class Folder {
   @Column()
   updatedAt: string;
 
-  @OneToMany(() => Item, (item) => item.folder)
-  items: Item[];
-
   @ManyToOne(() => User, (user) => user.folders)
   user: User;
 
