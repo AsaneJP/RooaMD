@@ -12,7 +12,7 @@ export class Item {
   @Column({ nullable: true })
   parentId: string;
 
-  @Column()
+  @Column({ nullable: true })
   contents: string;
 
   @Column()

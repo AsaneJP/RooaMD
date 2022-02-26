@@ -41,7 +41,7 @@ export const AddContent: VFC<Props> = memo((props) => {
   const setOpen = useSetRecoilState(addContentState)
   const selectedIndex = useRecoilValue(listCheckState)
   const cookie = useCookies(['accessToken'])
-  const [msg, setMsg] = useState<"error" | "success" | "warning" | "info" | "default">("default")
+  const [msg, setMsg] = useState<'error' | 'success' | 'warning' | 'info' | 'default'>('default')
 
   const {
     register,
@@ -55,21 +55,27 @@ export const AddContent: VFC<Props> = memo((props) => {
 
   const onSubmit = (inData: FormData) => {
     if (cookie[0].accessToken !== undefined) {
+      let path = ""
       if (judge) {
-        axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
-        const data = {
-          name: inData.name,
-        }
-
-        axios
-          .post(`${process.env.REACT_APP_API_URL || 'local'}/folders`, data)
-          .then(() => {
-            setMsg('success')
-          })
-          .catch(() => {
-            setMsg('error')
-          })
+        path = "folders"
+      } else {
+        path = "items"
       }
+      axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
+      const data = {
+        name: inData.name,
+      }
+
+      axios
+        .post(`${process.env.REACT_APP_API_URL || 'local'}/${path}`, data)
+        .then((res) => {
+          console.log(res)
+          setMsg('success')
+        })
+        .catch((error) => {
+          console.log(error)
+          setMsg('error')
+        })
     }
     reset({ name: '' })
     setOpen(false)
@@ -80,37 +86,37 @@ export const AddContent: VFC<Props> = memo((props) => {
     setOpen(false)
   }
 
-  if (msg !== "default") {
-    return (
-      <AleartMsg openMsg type={msg}>
-        {msg === 'success' ? '追加しました' : '予期せぬエラーが発生しました'}
-      </AleartMsg>
-    )
-  }
   return (
-    <ModalWindow>
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          {judge ? '新規フォルダー' : '新規ファイル'}
-        </Typography>
-        <InputText
-          id="name"
-          label="Add Name"
-          required
-          error={'name' in errors}
-          type="text"
-          helperText={errors.name?.message}
-          register={register('name')}
-        />
-        <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-          <Button onClick={handleClose} sx={{ marginRight: '10px' }}>
-            キャンセル
-          </Button>
-          <Button type="submit" variant="contained" onClick={handleSubmit(onSubmit)}>
-            新規作成
-          </Button>
+    <>
+      {msg !== 'default' && (
+        <AleartMsg openMsg type={msg}>
+          {msg === 'success' ? '追加しました' : '予期せぬエラーが発生しました'}
+        </AleartMsg>
+      )}
+      <ModalWindow>
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            {judge ? '新規フォルダー' : '新規ファイル'}
+          </Typography>
+          <InputText
+            id="name"
+            label="Add Name"
+            required
+            error={'name' in errors}
+            type="text"
+            helperText={errors.name?.message}
+            register={register('name')}
+          />
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button onClick={handleClose} sx={{ marginRight: '10px' }}>
+              キャンセル
+            </Button>
+            <Button type="submit" variant="contained" onClick={handleSubmit(onSubmit)}>
+              新規作成
+            </Button>
+          </Box>
         </Box>
-      </Box>
-    </ModalWindow>
+      </ModalWindow>
+    </>
   )
 })
