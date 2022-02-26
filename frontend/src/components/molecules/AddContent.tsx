@@ -53,17 +53,38 @@ export const AddContent: VFC<Props> = memo((props) => {
     resolver: yupResolver(schema),
   })
 
+  let parentId: string | null = null
+  if (selectedIndex === 'setting' || selectedIndex === 'user' || selectedIndex === 'default') {
+    parentId = null
+  } else {
+    const [parent, child] = selectedIndex.split('/')
+    const [childId, ext] = child.split('.')
+
+    if (parent === '.') {
+      if (ext === 'md') {
+        parentId = null
+      } else {
+        parentId = childId
+      }
+    } else if (ext === 'md') {
+      parentId = parent
+    } else {
+      parentId = childId
+    }
+  }
+
   const onSubmit = (inData: FormData) => {
     if (cookie[0].accessToken !== undefined) {
-      let path = ""
+      let path = ''
       if (judge) {
-        path = "folders"
+        path = 'folders'
       } else {
-        path = "items"
+        path = 'items'
       }
       axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
       const data = {
         name: inData.name,
+        parentId,
       }
 
       axios

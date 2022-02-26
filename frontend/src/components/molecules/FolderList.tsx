@@ -1,51 +1,55 @@
-import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
-import { memo, ReactElement, useEffect, useState, VFC } from 'react'
-import Collapse from '@mui/material/Collapse'
-import ExpandLess from '@mui/icons-material/ExpandLess'
-import ExpandMore from '@mui/icons-material/ExpandMore'
-import FolderIcon from '@mui/icons-material/Folder'
-import { useRecoilState, useRecoilValue } from 'recoil'
-import { menuOpenState } from '../../globalState/menuOpenState'
-import { listCheckState } from '../../globalState/listCheckState'
+import { memo, VFC } from 'react'
+import DescriptionIcon from '@mui/icons-material/Description'
+import { useGetContent } from '../../hooks/useGetContent'
+import { FolderContent } from '../atom/FolderContent'
+import { ListContent } from '../atom/ListContent'
 
 type Props = {
   folderId: string
   folderName: string
-  children?: ReactElement
+  parentId: string
 }
 
 export const FolderList: VFC<Props> = memo((props) => {
-  const { folderId, folderName, children } = props
-  const [open, setOpen] = useState(false)
-
-  const [selectedIndex, setSelectedIndex] = useRecoilState(listCheckState)
-  const menuOpen = useRecoilValue(menuOpenState)
-
-  useEffect(() => {
-    if (menuOpen) {
-      setOpen(!menuOpen)
-    }
-  }, [menuOpen])
-
-  const handleClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: string) => {
-    setOpen(!open)
-    setSelectedIndex(index)
-  }
+  const { folderId, folderName, parentId } = props
+  const { folders, items } = useGetContent()
 
   return (
-    <>
-      <ListItem button onClick={(event) => handleClick(event, folderId)} selected={selectedIndex === folderId}>
-        <ListItemIcon>
-          <FolderIcon />
-        </ListItemIcon>
-        <ListItemText primary={folderName} />
-        {open ? <ExpandLess /> : <ExpandMore />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding dense sx={{ pl: 2 }}>
-          {children}
-        </List>
-      </Collapse>
-    </>
+    <FolderContent folderId={folderId} folderName={folderName} parentId={parentId}>
+      <>
+        {folders
+          ? folders.map((folder) => {
+              if (folder.parentId === folderId) {
+                return (
+                  <FolderList
+                    key={folder.id}
+                    folderId={folder.id}
+                    folderName={folder.name}
+                    parentId={folder.parentId}
+                  />
+                )
+              }
+              return null
+            })
+          : null}
+        {items
+          ? items.map((item) => {
+              if (item.parentId === folderId) {
+                return (
+                  <ListContent
+                    key={item.id}
+                    id={item.id}
+                    name={item.name}
+                    parentId={item.parentId}
+                    url="/editor"
+                    icon={<DescriptionIcon />}
+                  />
+                )
+              }
+              return null
+            })
+          : null}
+      </>
+    </FolderContent>
   )
 })

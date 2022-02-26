@@ -1,42 +1,16 @@
-import { memo, useEffect, useState } from 'react'
+import { memo } from 'react'
 import { useSetRecoilState } from 'recoil'
 import { ListSubheader, List } from '@mui/material'
-import axios, { AxiosError } from 'axios'
-import { useCookies } from 'react-cookie'
 import DescriptionIcon from '@mui/icons-material/Description'
-import { FolderList } from '../molecules/FolderList'
 import { ListContent } from '../atom/ListContent'
-import { Folder } from '../../types/api/Folder'
 import { listCheckState } from '../../globalState/listCheckState'
+import { useGetContent } from '../../hooks/useGetContent'
+import { FolderList } from '../molecules/FolderList'
 
 export const MainListItem = memo(() => {
-  const [folders, setFolders] = useState<Folder[]>([])
-  const cookie = useCookies(['accessToken'])
   const setSelectedIndex = useSetRecoilState(listCheckState)
 
-  useEffect(() => {
-    let isMounted = true
-    axios
-      .get<Array<Folder>>(`${process.env.REACT_APP_API_URL || 'local'}/folders`, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${cookie[0].accessToken}`,
-        },
-      })
-      .then((res) => {
-        if (isMounted) {
-          setFolders(res.data)
-        }
-      })
-      .catch((error: AxiosError<{ additionalInfo: string }>) => {
-        // eslint-disable-next-line no-console
-        console.log(error.message)
-      })
-
-    return () => {
-      isMounted = false
-    }
-  }, [folders, cookie])
+  const { folders, items } = useGetContent()
 
   const handleListClear = () => {
     setSelectedIndex('default')
@@ -44,13 +18,36 @@ export const MainListItem = memo(() => {
 
   return (
     <List dense>
-      <ListSubheader inset onClick={handleListClear} sx={{ cursor: "default" }}>Folder</ListSubheader>
-      <ListContent url="/editor" icon={<DescriptionIcon />} selectIndex="SampleFile">
-        SampleFile
-      </ListContent>
-      {folders ? folders.map((folder) => (
-        <FolderList key={folder.id} folderId={folder.id} folderName={folder.name} />
-      )) : null}
+      <ListSubheader inset onClick={handleListClear} sx={{ cursor: 'default' }}>
+        Folder
+      </ListSubheader>
+      {folders
+        ? folders.map((folder) => {
+            if (folder.parentId === null || folder.parentId === '') {
+              return (
+                <FolderList key={folder.id} folderId={folder.id} folderName={folder.name} parentId={folder.parentId} />
+              )
+            }
+            return null
+          })
+        : null}
+      {items
+        ? items.map((item) => {
+            if (item.parentId === null || item.parentId === '') {
+              return (
+                <ListContent
+                  key={item.id}
+                  id={item.id}
+                  name={item.name}
+                  parentId={item.parentId}
+                  url="/editor"
+                  icon={<DescriptionIcon />}
+                />
+              )
+            }
+            return null
+          })
+        : null}
     </List>
   )
 })

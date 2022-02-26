@@ -6,31 +6,40 @@ import { useRecoilState } from 'recoil'
 import { listCheckState } from '../../globalState/listCheckState'
 
 type Props = {
-  children: string
+  id: string
+  name: string
+  parentId?: string
   url: string
   icon: ReactElement
-  selectIndex: string
 }
 
 export const ListContent: VFC<Props> = memo((props) => {
-  const { children, icon, selectIndex, url } = props
+  const { id, name, parentId, icon } = props
 
   const navigate = useNavigate()
   const [selectedIndex, setSelectedIndex] = useRecoilState(listCheckState)
 
-  const handleListItemClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>, index: string) => {
-    setSelectedIndex(index)
-    navigate(url)
+  let path = ''
+
+  if (parentId == null || parentId === '') {
+    if (id === 'setting' || id === 'user' || id === 'default') {
+      path = id
+    } else {
+      path = `./${id}.md`
+    }
+  } else {
+    path = `${parentId}/${id}.md`
+  }
+
+  const handleClick = () => {
+    setSelectedIndex(path)
+    navigate('/editor')
   }
 
   return (
-    <ListItem
-      button
-      selected={selectedIndex === selectIndex}
-      onClick={(event) => handleListItemClick(event, selectIndex)}
-    >
+    <ListItem button selected={selectedIndex === path} onClick={handleClick}>
       <ListItemIcon>{icon}</ListItemIcon>
-      <ListItemText primary={children} />
+      <ListItemText primary={name} />
     </ListItem>
   )
 })
