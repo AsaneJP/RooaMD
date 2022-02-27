@@ -1,6 +1,7 @@
 import { memo, VFC } from 'react'
 import { Route, Routes } from 'react-router-dom'
 import { Editor } from '../components/pages/Editor'
+import { FolderSetting } from '../components/pages/FolderSetting'
 import { Index } from '../components/pages/Index'
 import { SignIn } from '../components/pages/SignIn'
 import { SignUp } from '../components/pages/SignUp'
@@ -22,6 +23,15 @@ export const Router: VFC = memo(() => (
       element={
         <AuthGuard title="Editor">
           <Editor />
+        </AuthGuard>
+      }
+    />
+
+    <Route
+      path="/folder/:id"
+      element={
+        <AuthGuard title="Folder">
+          <FolderSetting />
         </AuthGuard>
       }
     />

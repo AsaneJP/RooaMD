@@ -73,6 +73,7 @@ export const Editor: VFC = memo(() => {
       axios
         .patch(`${process.env.REACT_APP_API_URL || 'local'}/items/update/${id}`, data)
         .catch((error: AxiosError<{ additionalInfo: string }>) => {
+          // eslint-disable-next-line no-console
           console.log(error.response)
         })
     },

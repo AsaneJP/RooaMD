@@ -8,14 +8,15 @@ type Props = {
   folderId: string
   folderName: string
   parentId: string
+  url: string
 }
 
 export const FolderList: VFC<Props> = memo((props) => {
-  const { folderId, folderName, parentId } = props
+  const { folderId, folderName, parentId, url } = props
   const { folders, items } = useGetContent()
 
   return (
-    <FolderContent folderId={folderId} folderName={folderName} parentId={parentId}>
+    <FolderContent folderId={folderId} folderName={folderName} parentId={parentId} url={url}>
       <>
         {folders
           ? folders.map((folder) => {
@@ -26,6 +27,7 @@ export const FolderList: VFC<Props> = memo((props) => {
                     folderId={folder.id}
                     folderName={folder.name}
                     parentId={folder.parentId}
+                    url={`/folder/${folder.id}`}
                   />
                 )
               }

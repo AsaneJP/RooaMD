@@ -1,6 +1,7 @@
 import { List, ListItem, ListItemIcon, ListItemText } from '@mui/material'
 import { memo, ReactElement, useEffect, useState, VFC } from 'react'
 import Collapse from '@mui/material/Collapse'
+import { useNavigate } from 'react-router-dom'
 import ExpandLess from '@mui/icons-material/ExpandLess'
 import ExpandMore from '@mui/icons-material/ExpandMore'
 import FolderIcon from '@mui/icons-material/Folder'
@@ -13,10 +14,12 @@ type Props = {
   folderName: string
   parentId: string
   children?: ReactElement
+  url: string
 }
 
 export const FolderContent: VFC<Props> = memo((props) => {
-  const { folderId, folderName, parentId, children } = props
+  const { folderId, folderName, parentId, children, url } = props
+  const navigate = useNavigate()
   const [open, setOpen] = useState(false)
 
   const [selectedIndex, setSelectedIndex] = useRecoilState(listCheckState)
@@ -38,6 +41,7 @@ export const FolderContent: VFC<Props> = memo((props) => {
   const handleClick = () => {
     setOpen(!open)
     setSelectedIndex(path)
+    navigate(url)
   }
 
   return (

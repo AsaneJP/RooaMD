@@ -25,7 +25,7 @@ export const MainListItem = memo(() => {
         ? folders.map((folder) => {
             if (folder.parentId === null || folder.parentId === '') {
               return (
-                <FolderList key={folder.id} folderId={folder.id} folderName={folder.name} parentId={folder.parentId} />
+                <FolderList key={folder.id} folderId={folder.id} folderName={folder.name} parentId={folder.parentId} url={`/folder/${folder.id}`} />
               )
             }
             return null
