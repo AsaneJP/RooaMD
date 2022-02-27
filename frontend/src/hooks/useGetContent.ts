@@ -60,5 +60,5 @@ export const useGetContent = () => {
     }
   })
 
-  return {folders, items}
+  return { folders, items }
 }

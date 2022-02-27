@@ -40,7 +40,7 @@ export const MainListItem = memo(() => {
                   id={item.id}
                   name={item.name}
                   parentId={item.parentId}
-                  url="/editor"
+                  url={`/editor/${item.id}`}
                   icon={<DescriptionIcon />}
                 />
               )

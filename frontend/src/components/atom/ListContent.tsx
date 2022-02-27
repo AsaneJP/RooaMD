@@ -14,7 +14,7 @@ type Props = {
 }
 
 export const ListContent: VFC<Props> = memo((props) => {
-  const { id, name, parentId, icon } = props
+  const { id, name, parentId, icon, url } = props
 
   const navigate = useNavigate()
   const [selectedIndex, setSelectedIndex] = useRecoilState(listCheckState)
@@ -33,7 +33,7 @@ export const ListContent: VFC<Props> = memo((props) => {
 
   const handleClick = () => {
     setSelectedIndex(path)
-    navigate('/editor')
+    navigate(url)
   }
 
   return (

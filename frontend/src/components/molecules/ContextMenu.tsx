@@ -10,11 +10,11 @@ import { AddContent } from './AddContent'
 export const ContextMenu = memo(() => {
   const [contextMenu, setContextMenu] = useRecoilState(contextMenuState)
   const setOpen = useSetRecoilState(addContentState)
-  const [judge, setJudge] = useState(false);
+  const [judge, setJudge] = useState(false)
 
   const handleCreateFile = () => {
     setContextMenu(null)
-    setJudge(false);
+    setJudge(false)
     setOpen(true)
   }
 
@@ -37,11 +37,11 @@ export const ContextMenu = memo(() => {
         anchorPosition={contextMenu !== null ? { top: contextMenu.mouseY, left: contextMenu.mouseX } : undefined}
       >
         <MenuItem onClick={handleCreateFile}>
-          <NoteAddIcon  sx={{ marginRight: "10px" }} />
+          <NoteAddIcon sx={{ marginRight: '10px' }} />
           Create File
         </MenuItem>
         <MenuItem onClick={handleCreateFolder}>
-          <CreateNewFolderIcon sx={{ marginRight: "10px" }} />
+          <CreateNewFolderIcon sx={{ marginRight: '10px' }} />
           Create Folder
         </MenuItem>
       </Menu>

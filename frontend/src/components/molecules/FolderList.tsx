@@ -41,7 +41,7 @@ export const FolderList: VFC<Props> = memo((props) => {
                     id={item.id}
                     name={item.name}
                     parentId={item.parentId}
-                    url="/editor"
+                    url={`/editor/${item.id}`}
                     icon={<DescriptionIcon />}
                   />
                 )

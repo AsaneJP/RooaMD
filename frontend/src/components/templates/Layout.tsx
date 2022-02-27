@@ -4,6 +4,7 @@ import {
   createTheme,
   CssBaseline,
   Divider,
+  Hidden,
   IconButton,
   List,
   styled,

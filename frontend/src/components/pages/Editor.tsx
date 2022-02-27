@@ -1,11 +1,15 @@
-import { memo, useCallback, useMemo, useState, VFC } from 'react'
+import { memo, useCallback, useEffect, useMemo, useState, VFC } from 'react'
+import { css } from '@emotion/react'
+import { useCookies } from 'react-cookie'
+import axios, { AxiosError } from 'axios'
 import SimpleMde from 'react-simplemde-editor'
 import { Box } from '@mui/material'
 import hljs from 'highlight.js'
 import MarkdownIt from 'markdown-it'
-import { css } from '@emotion/react'
 import 'easymde/dist/easymde.min.css'
 import 'highlight.js/styles/github.css'
+import { useParams } from 'react-router-dom'
+import { Item } from '../../types/api/Item'
 
 const sanitizer = require('markdown-it-sanitizer')
 const emoji = require('markdown-it-emoji')
@@ -17,11 +21,38 @@ const sub = require('markdown-it-sub')
 const container = require('markdown-it-container')
 
 export const Editor: VFC = memo(() => {
-  const [markdown, setMarkdown] = useState<string>('# Hello, world! :smile:')
+  const [markdown, setMarkdown] = useState<string>('')
+  const { id } = useParams()
+  const cookie = useCookies(['accessToken'])
+  const removeCookie = useCookies(['accessToken'])[2]
 
-  const onChangeMarkdown = useCallback((value: string) => {
-    setMarkdown(value)
-  }, [])
+  useEffect(() => {
+    let isMounted = true
+    axios
+      .get<Item>(`${process.env.REACT_APP_API_URL || 'local'}/items/${id}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cookie[0].accessToken}`,
+        },
+      })
+      .then((res) => {
+        if (isMounted) {
+          if (res.data.contents) {
+            setMarkdown(res.data.contents)
+          }
+        }
+      })
+      .catch((error: AxiosError<{ additionalInfo: string }>) => {
+        if (error.response!.status === 401) {
+          removeCookie('accessToken')
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id])
 
   const mdOptions = useMemo(() => {
     return {
@@ -30,6 +61,23 @@ export const Editor: VFC = memo(() => {
       spellChecker: false,
     }
   }, [])
+
+  const onChangeMarkdown = useCallback(
+    (value: string) => {
+      setMarkdown(value)
+      axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
+      const data = {
+        contents: value,
+      }
+
+      axios
+        .patch(`${process.env.REACT_APP_API_URL || 'local'}/items/update/${id}`, data)
+        .catch((error: AxiosError<{ additionalInfo: string }>) => {
+          console.log(error.response)
+        })
+    },
+    [cookie, id]
+  )
 
   const mdParser = new MarkdownIt({
     html: true,
@@ -85,7 +133,6 @@ export const Editor: VFC = memo(() => {
   )
 })
 
-
 const editorStyle = css`
   .CodeMirror {
     height: 90vh;
@@ -102,32 +149,34 @@ const editorStyle = css`
 `
 
 const containerStyle = css`
-  @mixin base {
+  .success {
     margin: 10px 0;
     padding: 10px 10px;
     border-radius: 5px;
-  }
-
-  .success {
-    @include base();
     color: #3a6f3a;
     background-color: #daedd2;
   }
 
   .info {
-    @include base();
+    margin: 10px 0;
+    padding: 10px 10px;
+    border-radius: 5px;
     color: #2b6584;
     background-color: #d3eaf6;
   }
 
   .warning {
-    @include base();
+    margin: 10px 0;
+    padding: 10px 10px;
+    border-radius: 5px;
     color: #af9c75;
     background-color: #fcf7df;
   }
 
   .danger {
-    @include base();
+    margin: 10px 0;
+    padding: 10px 10px;
+    border-radius: 5px;
     color: #9f3b3a;
     background-color: #f0d9d9;
   }

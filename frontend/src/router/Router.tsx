@@ -13,12 +13,12 @@ export const Router: VFC = memo(() => (
       path="/"
       element={
         <AuthGuard title="Top Page">
-            <Index />
+          <Index />
         </AuthGuard>
       }
     />
     <Route
-      path="/editor"
+      path="/editor/:id"
       element={
         <AuthGuard title="Editor">
           <Editor />

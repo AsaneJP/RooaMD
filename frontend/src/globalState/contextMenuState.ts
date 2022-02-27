@@ -1,9 +1,9 @@
 import { atom } from 'recoil'
 
-export const contextMenuState = atom < {
+export const contextMenuState = atom<{
   mouseX: number
   mouseY: number
-} | null >({
+} | null>({
   key: 'contextMenuState',
   default: null,
 })
