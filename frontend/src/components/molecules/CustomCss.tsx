@@ -30,9 +30,7 @@ export const CustomCss: VFC<Props> = memo((props) => {
 
   return (
     <>
-      <Box sx={{ border: '1px solid', margin: '30px 30px 20px 30px' }}>
-        {children}
-      </Box>
+      <Box sx={{ border: '1px solid', margin: '30px 30px 20px 30px' }}>{children}</Box>
       <SimpleMde css={editorStyle} value={preview} onChange={onChangeMarkdown} options={mdOptions} />
     </>
   )

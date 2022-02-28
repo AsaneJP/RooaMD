@@ -42,6 +42,12 @@ export class FoldersService {
     updateFolder.name = folder.name;
     updateFolder.parentId = folder.parentId;
     updateFolder.updatedAt = new Date().toISOString();
+    updateFolder.header1 = folder.header1;
+    updateFolder.header2 = folder.header2;
+    updateFolder.header3 = folder.header3;
+    updateFolder.header4 = folder.header4;
+    updateFolder.header5 = folder.header5;
+    updateFolder.header6 = folder.header6;
     await this.folderRepository.save(updateFolder);
     return updateFolder;
   }

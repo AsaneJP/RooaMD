@@ -23,4 +23,22 @@ export class Folder {
 
   @Column()
   userId: string;
+
+  @Column({ nullable: true })
+  header1: string;
+
+  @Column({ nullable: true })
+  header2: string;
+
+  @Column({ nullable: true })
+  header3: string;
+
+  @Column({ nullable: true })
+  header4: string;
+
+  @Column({ nullable: true })
+  header5: string;
+
+  @Column({ nullable: true })
+  header6: string;
 }

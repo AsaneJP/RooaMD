@@ -1,15 +1,27 @@
-# env
+# RooaMD
+## 使用技術
+* frontend
+  * React
+  * MaterialUI (MUI) v6
+* backend
+  * Nestjs
+* Database
+  * Docker
+  * PostgreSQL
+
+## ENVファイルの追加
+`./.env`に環境変数を作成
 ```
-#db
-POSTGRES_USER = 
-POSTGRES_PASSWORD = 
-POSTGRES_INITDB_ARGS = 
-POSTGRES_DB = 
+# Database Setting
+POSTGRES_USER = ""
+POSTGRES_PASSWORD = "" 
+POSTGRES_INITDB_ARGS = ""
+POSTGRES_DB = ""
 
-#pgadmin
-PGADMIN_DEFAULT_EMAIL = 
-PGADMIN_DEFAULT_PASSWORD = 
+# pgadmin Setting
+PGADMIN_DEFAULT_EMAIL = ""
+PGADMIN_DEFAULT_PASSWORD = "" 
 
-#timezone
-TZ = 
+# TimeZone Setting
+TZ = ""
 ```

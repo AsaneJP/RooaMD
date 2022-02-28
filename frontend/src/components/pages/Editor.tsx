@@ -10,6 +10,7 @@ import 'easymde/dist/easymde.min.css'
 import 'highlight.js/styles/github.css'
 import { useParams } from 'react-router-dom'
 import { Item } from '../../types/api/Item'
+import { Folder } from '../../types/api/Folder'
 
 const sanitizer = require('markdown-it-sanitizer')
 const emoji = require('markdown-it-emoji')
@@ -22,6 +23,8 @@ const container = require('markdown-it-container')
 
 export const Editor: VFC = memo(() => {
   const [markdown, setMarkdown] = useState<string>('')
+  const [parentId, setParentId] = useState<string>('')
+  const [custom, setCustom] = useState<Array<string>>(['', '', '', '', ''])
   const { id } = useParams()
   const cookie = useCookies(['accessToken'])
   const removeCookie = useCookies(['accessToken'])[2]
@@ -39,6 +42,7 @@ export const Editor: VFC = memo(() => {
         if (isMounted) {
           if (res.data.contents) {
             setMarkdown(res.data.contents)
+            setParentId(res.data.parentId)
           }
         }
       })
@@ -53,6 +57,51 @@ export const Editor: VFC = memo(() => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+
+  useEffect(() => {
+    let isMounted = true
+    axios
+      .get<Folder>(`${process.env.REACT_APP_API_URL || 'local'}/folders/${parentId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${cookie[0].accessToken}`,
+        },
+      })
+      .then((res) => {
+        if (isMounted) {
+          const customCss = custom
+          if (res.data.header1 != null) {
+            customCss[0] = res.data.header1
+          }
+          if (res.data.header2 != null) {
+            customCss[1] = res.data.header2
+          }
+          if (res.data.header3 != null) {
+            customCss[2] = res.data.header3
+          }
+          if (res.data.header4 != null) {
+            customCss[3] = res.data.header4
+          }
+          if (res.data.header5 != null) {
+            customCss[4] = res.data.header5
+          }
+          if (res.data.header6 != null) {
+            customCss[5] = res.data.header6
+          }
+          setCustom(customCss)
+        }
+      })
+      .catch((error: AxiosError<{ additionalInfo: string }>) => {
+        if (error.response!.status === 401) {
+          removeCookie('accessToken')
+        }
+      })
+
+    return () => {
+      isMounted = false
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [parentId, id])
 
   const mdOptions = useMemo(() => {
     return {
@@ -119,7 +168,27 @@ export const Editor: VFC = memo(() => {
         <SimpleMde value={markdown} onChange={onChangeMarkdown} options={mdOptions} css={editorStyle} />
       </Box>
       <Box
-        css={containerStyle}
+        css={css`
+          h1 {
+            ${custom[0]}
+          }
+          h2 {
+            ${custom[1]}
+          }
+          h3 {
+            ${custom[2]}
+          }
+          h4 {
+            ${custom[3]}
+          }
+          h5 {
+            ${custom[4]}
+          }
+          h6 {
+            ${custom[5]}
+          }
+          ${containerStyle}
+        `}
         sx={{
           maxHeight: '100%',
           width: '50%',

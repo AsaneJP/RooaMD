@@ -49,8 +49,24 @@ export class FoldersController {
     @GetUser() user: User,
     @Body('name') name: string,
     @Body('parentId') parentId: string,
+    @Body('header1') header1: string,
+    @Body('header2') header2: string,
+    @Body('header3') header3: string,
+    @Body('header4') header4: string,
+    @Body('header5') header5: string,
+    @Body('header6') header6: string,
   ): Promise<Folder> {
-    const folder: FolderModel = { id, name, parentId };
+    const folder: FolderModel = {
+      id,
+      name,
+      parentId,
+      header1,
+      header2,
+      header3,
+      header4,
+      header5,
+      header6,
+    };
     return await this.foldersService.update(folder, user);
   }
 

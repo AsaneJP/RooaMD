@@ -31,7 +31,24 @@ export const FolderSetting = () => {
       })
       .then((res) => {
         if (isMounted) {
-          // console.log(res)
+          if (res.data.header1 != null) {
+            setHeader1(res.data.header1)
+          }
+          if (res.data.header2 != null) {
+            setHeader2(res.data.header2)
+          }
+          if (res.data.header3 != null) {
+            setHeader3(res.data.header3)
+          }
+          if (res.data.header4 != null) {
+            setHeader4(res.data.header4)
+          }
+          if (res.data.header5 != null) {
+            setHeader5(res.data.header5)
+          }
+          if (res.data.header6 != null) {
+            setHeader6(res.data.header6)
+          }
         }
       })
       .catch((error: AxiosError<{ additionalInfo: string }>) => {
@@ -45,6 +62,26 @@ export const FolderSetting = () => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id])
+
+  useEffect(() => {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${cookie[0].accessToken}`
+    const data = {
+      header1,
+      header2,
+      header3,
+      header4,
+      header5,
+      header6,
+    }
+
+    axios
+      .patch(`${process.env.REACT_APP_API_URL || 'local'}/folders/update/${id}`, data)
+      .catch((error: AxiosError<{ additionalInfo: string }>) => {
+        // eslint-disable-next-line no-console
+        console.log(error.response)
+      })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, header1, header2, header3, header4, header5, header6])
 
   return (
     <Box sx={{ width: '100%' }}>

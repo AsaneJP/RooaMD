@@ -3,8 +3,10 @@ import { Route, Routes } from 'react-router-dom'
 import { Editor } from '../components/pages/Editor'
 import { FolderSetting } from '../components/pages/FolderSetting'
 import { Index } from '../components/pages/Index'
+import { Setting } from '../components/pages/Setting'
 import { SignIn } from '../components/pages/SignIn'
 import { SignUp } from '../components/pages/SignUp'
+import { User } from '../components/pages/User'
 import { Layout } from '../components/templates/Layout'
 import { AuthGuard } from './AuthGuard'
 
@@ -13,7 +15,7 @@ export const Router: VFC = memo(() => (
     <Route
       path="/"
       element={
-        <AuthGuard title="Top Page">
+        <AuthGuard title="Home">
           <Index />
         </AuthGuard>
       }
@@ -32,6 +34,24 @@ export const Router: VFC = memo(() => (
       element={
         <AuthGuard title="Folder">
           <FolderSetting />
+        </AuthGuard>
+      }
+    />
+
+    <Route
+      path="/user"
+      element={
+        <AuthGuard title="Folder">
+          <User />
+        </AuthGuard>
+      }
+    />
+
+    <Route
+      path="/setting"
+      element={
+        <AuthGuard title="Setting">
+          <Setting />
         </AuthGuard>
       }
     />

@@ -176,7 +176,7 @@ export const Layout: VFC<Props> = memo((props) => {
           <Box sx={{ display: 'flex', flexDirection: 'column', marginTop: 'auto' }}>
             <Divider />
             <List>
-              <ListContent id="setting" name="設定" url="/config" icon={<SettingsIcon />} />
+              <ListContent id="setting" name="設定" url="/setting" icon={<SettingsIcon />} />
               <ListContent id="user" name="ユーザー" url="/user" icon={<PersonIcon />} />
             </List>
           </Box>
